@@ -8,8 +8,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import br.com.gabrielalmir.webclientrickandmortyapi.character.dtos.CharacterDto;
 import br.com.gabrielalmir.webclientrickandmortyapi.episode.dtos.EpisodeDto;
+import br.com.gabrielalmir.webclientrickandmortyapi.episode.dtos.ListOfEpisodeDto;
 import br.com.gabrielalmir.webclientrickandmortyapi.location.dtos.LocationDto;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -49,5 +51,16 @@ public class WebClientService {
             .retrieve()
             .onStatus(HttpStatusCode::is4xxClientError, error -> Mono.error(new RuntimeException("Verifique o parâmetro informado.")))
             .bodyToMono(EpisodeDto.class);
+    }
+
+    public Flux<ListOfEpisodeDto> getAllEpisodes() {
+        log.info("Buscando todos os episódios");
+        return webClient
+            .get()
+            .uri("/episode/")
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .onStatus(HttpStatusCode::is4xxClientError, error -> Mono.error(new RuntimeException("Verifique o parâmetro informado.")))
+            .bodyToFlux(ListOfEpisodeDto.class);
     }
 }
