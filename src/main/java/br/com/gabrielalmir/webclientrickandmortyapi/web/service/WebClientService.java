@@ -6,7 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import br.com.gabrielalmir.webclientrickandmortyapi.character.dtos.CharacterDTO;
+import br.com.gabrielalmir.webclientrickandmortyapi.character.dtos.CharacterDto;
+import br.com.gabrielalmir.webclientrickandmortyapi.location.dtos.LocationDto;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
@@ -16,7 +17,7 @@ public class WebClientService {
     @Autowired
     private WebClient webClient;
 
-    public Mono<CharacterDTO> findCharacterById(String id) {
+    public Mono<CharacterDto> findCharacterById(String id) {
         log.info("Buscando o personagem no ID [{}]", id);
         return webClient
             .get()
@@ -24,6 +25,17 @@ public class WebClientService {
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .onStatus(HttpStatusCode::is4xxClientError, error -> Mono.error(new RuntimeException("Verifique o parâmetro informado.")))
-            .bodyToMono(CharacterDTO.class);
+            .bodyToMono(CharacterDto.class);
+    }
+
+    public Mono<LocationDto> findLocationById(String id) {
+        log.info("Buscando a localização pelo ID [{}]", id);
+        return webClient
+            .get()
+            .uri("/location/" + id)
+            .accept(MediaType.APPLICATION_JSON)
+            .retrieve()
+            .onStatus(HttpStatusCode::is4xxClientError, error -> Mono.error(new RuntimeException("Verifique o parâmetro informado.")))
+            .bodyToMono(LocationDto.class);
     }
 }
