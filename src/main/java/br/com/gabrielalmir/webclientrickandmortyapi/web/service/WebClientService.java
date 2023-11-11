@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import br.com.gabrielalmir.webclientrickandmortyapi.character.response.CharacterResponse;
+import br.com.gabrielalmir.webclientrickandmortyapi.character.dtos.CharacterDTO;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
@@ -16,7 +16,7 @@ public class WebClientService {
     @Autowired
     private WebClient webClient;
 
-    public Mono<CharacterResponse> findCharacterById(String id) {
+    public Mono<CharacterDTO> findCharacterById(String id) {
         log.info("Buscando o personagem no ID [{}]", id);
         return webClient
             .get()
@@ -24,6 +24,6 @@ public class WebClientService {
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .onStatus(HttpStatusCode::is4xxClientError, error -> Mono.error(new RuntimeException("Verifique o parâmetro informado.")))
-            .bodyToMono(CharacterResponse.class);
+            .bodyToMono(CharacterDTO.class);
     }
 }

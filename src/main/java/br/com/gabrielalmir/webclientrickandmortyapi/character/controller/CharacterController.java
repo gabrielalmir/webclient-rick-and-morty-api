@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.gabrielalmir.webclientrickandmortyapi.character.response.CharacterResponse;
+import br.com.gabrielalmir.webclientrickandmortyapi.character.dtos.CharacterDTO;
 import br.com.gabrielalmir.webclientrickandmortyapi.web.service.WebClientService;
 import reactor.core.publisher.Mono;
 
@@ -17,7 +17,7 @@ public class CharacterController {
     private WebClientService webClientService;
 
     @GetMapping("{id}")
-    public Mono<CharacterResponse> getCharacterById(@PathVariable String id) {
+    public Mono<CharacterDTO> getCharacterById(@PathVariable String id) {
         return webClientService.findCharacterById(id);
     }
 }
